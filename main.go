@@ -40,6 +40,8 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		log.Printf("Generated schema for %s.%s", dbName, tableName)
 	},
 }
 
