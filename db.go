@@ -29,6 +29,8 @@ func (c *Connection) GetBQSchema(dbName, tableName string) ([]byte, error) {
 		return nil, err
 	}
 
+	isEmpty := true
+
 	for rows.Next() {
 		var columnSchema ColumnSchema
 
@@ -41,6 +43,12 @@ func (c *Connection) GetBQSchema(dbName, tableName string) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		isEmpty = false
+	}
+
+	if isEmpty {
+		return nil, fmt.Errorf("No columns found for %s.%s", dbName, tableName)
 	}
 
 	return tableSchema.ToJSON()
