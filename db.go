@@ -47,8 +47,8 @@ func (c *Connection) GetBQSchema(dbName, tableName string) ([]byte, error) {
 }
 
 // NewConnection : Create new Connection
-func NewConnection(connType, username, password, host string) (*Connection, error) {
-	connStr := fmt.Sprintf("%s:%s@tcp(%s)/?charset=utf8", username, password, host)
+func NewConnection(connType, username, password, host, port string) (*Connection, error) {
+	connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/", username, password, host, port)
 
 	db, err := sql.Open(connType, connStr)
 	if err != nil {

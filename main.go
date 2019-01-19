@@ -12,6 +12,7 @@ var (
 	username string
 	password string
 	host     string
+	port     string
 
 	dbName    string
 	tableName string
@@ -24,7 +25,7 @@ var rootCmd = &cobra.Command{
 	Short: "Generate Google BigQuery schema from SQL database tables",
 	Long:  "Generate Google BigQuery schema from SQL database tables",
 	Run: func(cmd *cobra.Command, args []string) {
-		conn, err := NewConnection(connType, username, password, host)
+		conn, err := NewConnection(connType, username, password, host, port)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -61,6 +62,8 @@ func init() {
 
 	rootCmd.Flags().StringVar(&host, "host", "", "host")
 	rootCmd.MarkFlagRequired("host")
+
+	rootCmd.Flags().StringVar(&port, "port", "3306", "host")
 
 	rootCmd.Flags().StringVar(&dbName, "database", "", "database name")
 	rootCmd.MarkFlagRequired("database")
