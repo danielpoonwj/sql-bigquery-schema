@@ -21,12 +21,12 @@ func (c *Connection) Close() error {
 }
 
 // GetBQSchema : Get BigQuery schema for specific table
-func (c *Connection) GetBQSchema(dbName, tableName string) (string, error) {
+func (c *Connection) GetBQSchema(dbName, tableName string) ([]byte, error) {
 	tableSchema := NewTableSchema(c.TypeMap)
 
 	rows, err := c.DB.Query(c.QueryString, dbName, tableName)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	for rows.Next() {
@@ -34,12 +34,12 @@ func (c *Connection) GetBQSchema(dbName, tableName string) (string, error) {
 
 		err = rows.Scan(&columnSchema.Name, &columnSchema.Type)
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 
 		err = tableSchema.AddColumn(&columnSchema)
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 	}
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"io/ioutil"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -15,6 +15,8 @@ var (
 
 	dbName    string
 	tableName string
+
+	outputPath string
 )
 
 var rootCmd = &cobra.Command{
@@ -33,7 +35,10 @@ var rootCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		fmt.Println(schema)
+		err = ioutil.WriteFile(outputPath, schema, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
@@ -62,4 +67,7 @@ func init() {
 
 	rootCmd.Flags().StringVar(&tableName, "table", "", "table name")
 	rootCmd.MarkFlagRequired("table")
+
+	rootCmd.Flags().StringVarP(&outputPath, "output", "o", "", "output file path")
+	rootCmd.MarkFlagRequired("output")
 }

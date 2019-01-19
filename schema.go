@@ -26,15 +26,9 @@ func (t *TableSchema) AddColumn(c *ColumnSchema) error {
 }
 
 // ToJSON : Generate BQ schema JSON
-func (t *TableSchema) ToJSON() (string, error) {
+func (t *TableSchema) ToJSON() ([]byte, error) {
 	bqSchema := SchemaToBQ(t.BQSchema)
-
-	jsonBytes, err := json.MarshalIndent(bqSchema, "", "    ")
-	if err != nil {
-		return "", err
-	}
-
-	return string(jsonBytes), nil
+	return json.MarshalIndent(bqSchema, "", "    ")
 }
 
 // NewTableSchema : New TableSchema
