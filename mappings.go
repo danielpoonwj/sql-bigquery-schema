@@ -9,7 +9,8 @@ var SQLQueryMap = map[string]string{
 	"mysql": `
 		SELECT column_name, UPPER(data_type)
 		FROM information_schema.columns
-		WHERE table_schema=? AND table_name=?;
+		WHERE table_schema=? AND table_name=?
+		ORDER BY ordinal_position;
 	`,
 }
 
