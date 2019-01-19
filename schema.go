@@ -27,7 +27,7 @@ func (t *TableSchema) AddColumn(c *ColumnSchema) error {
 
 // ToJSON : Generate BQ schema JSON
 func (t *TableSchema) ToJSON() ([]byte, error) {
-	bqSchema := SchemaToBQ(t.BQSchema)
+	bqSchema := schemaToBQ(t.BQSchema)
 	return json.MarshalIndent(bqSchema, "", "    ")
 }
 
@@ -59,9 +59,9 @@ func (c *ColumnSchema) toBQ(fieldMap TypeMap) (*bigquery.FieldSchema, error) {
 	}, nil
 }
 
-// FieldSchemaToBQ : Convert between internal formats - adapted from private method
+// fieldSchemaToBQ : Convert between internal formats - adapted from private method
 // https://github.com/googleapis/google-cloud-go/blob/105f0564f8d67e66e7ea5ecc5a6e46dad440aa09/bigquery/schema.go#L53-L71
-func FieldSchemaToBQ(fs *bigquery.FieldSchema) *bq.TableFieldSchema {
+func fieldSchemaToBQ(fs *bigquery.FieldSchema) *bq.TableFieldSchema {
 	tfs := &bq.TableFieldSchema{
 		Description: fs.Description,
 		Name:        fs.Name,
@@ -75,18 +75,18 @@ func FieldSchemaToBQ(fs *bigquery.FieldSchema) *bq.TableFieldSchema {
 	} // else leave as default, which is interpreted as NULLABLE.
 
 	for _, f := range fs.Schema {
-		tfs.Fields = append(tfs.Fields, FieldSchemaToBQ(f))
+		tfs.Fields = append(tfs.Fields, fieldSchemaToBQ(f))
 	}
 
 	return tfs
 }
 
-// SchemaToBQ : Convert between internal formats - adapted from private method
+// schemaToBQ : Convert between internal formats - adapted from private method
 // https://github.com/googleapis/google-cloud-go/blob/105f0564f8d67e66e7ea5ecc5a6e46dad440aa09/bigquery/schema.go#L73-L79
-func SchemaToBQ(s bigquery.Schema) *bq.TableSchema {
+func schemaToBQ(s bigquery.Schema) []*bq.TableFieldSchema {
 	var fields []*bq.TableFieldSchema
 	for _, f := range s {
-		fields = append(fields, FieldSchemaToBQ(f))
+		fields = append(fields, fieldSchemaToBQ(f))
 	}
-	return &bq.TableSchema{Fields: fields}
+	return fields
 }
